@@ -182,11 +182,16 @@ define(function(require) {
 
         setStage: function(stage, initial) {
             this.model.set('_stage', stage);
+
+            var currentItem = this.getCurrentItem(stage);
+
             if (this.model.get('_isDesktop')) {
                 // Set the visited attribute for large screen devices
-                var currentItem = this.getCurrentItem(stage);
                 currentItem._isVisited = true;
             }
+
+            // notify an item has changed
+            Adapt.trigger('narrative:itemChanged', { model: this.model, item: currentItem });
 
             this.$('.narrative-progress:visible').removeClass('selected').eq(stage).addClass('selected');
             this.$('.narrative-slider-graphic').children('.controls').a11y_cntrl_enabled(false);
